@@ -3,345 +3,871 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <title>jobseekers</title>
+    <title>CAREERLINK - Jobseeker Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #f8fafc;
+            --accent: #3b82f6;
+        }
+
         body {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f2f2f2;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
         }
 
-        .navbar {
-            position: fixed;
-            top: 0;
-            width: 98%;
-            z-index: 1000;
-            background-color: #fff;
-            padding: 15px 20px;
+        .logo-text {
+            background: linear-gradient(90deg, #2563eb, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .bento-card {
+            border-radius: 1rem;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .bento-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .bento-card.large {
+            grid-column: span 2;
+        }
+
+        @media (max-width: 768px) {
+            .bento-card.large {
+                grid-column: span 1;
+            }
+        }
+
+        /* Carousel Styles */
+        .carousel-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 1rem;
+        }
+
+        .carousel {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: #000;
-            transition: background-color 0.5s ease;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-        }
-
-        .nav-links {
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            align-items: center;
-        }
-
-        .nav-links li {
-            margin-right: 20px;
-        }
-
-        .nav-links li a {
-            text-decoration: none;
-            color: #000;
-            transition: color 0.3s ease;
-        }
-
-        .nav-links li a:hover {
-            color: #ccc;
-        }
-
-        .login-btn {
-            background-color: #ff0000;
-            color: #fff;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, color 0.3s ease;
-            text-decoration: none;
-            animation: buttonAnimation 0.5s ease forwards;
-        }
-
-        .login-btn:hover {
-            background-color: #fff;
-            color: #ff0000;
-        }
-
-        .content {
-            padding: 20px;
-            text-align: center;
-            margin-top: 100px; /* Adjusted to account for the fixed navbar */
-        }
-
-        .job-portal-images img {
-            width: 300px;
-            height: auto;
-            margin: 20px;
-            transition: transform 0.3s ease;
-        }
-
-        .job-portal-images img:hover {
-            transform: scale(1.1);
-        }
-
-        .job-cards {
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-        }
-
-        .job-card {
-            background-color: #f9f9f9;
-            border-radius: 10px;
-            padding: 20px;
-            margin: 10px;
-            width: 250px;
-            text-align: center;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
-            text-decoration: none;
-            color: #000;
+        .carousel-item {
+            min-width: 100%;
             position: relative;
         }
 
-        .job-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .job-card h3 {
-            margin-top: 0;
-        }
-
-        .job-card p {
-            margin-bottom: 15px;
-        }
-
-        .job-card img {
+        .carousel-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            border-top-left-radius: 10px;
-            border-top-right-radius: 10px;
-            object-fit: cover;
-            height: 150px;
+            height: 100%;
+            z-index: -1;
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
         }
 
-        .view-all {
-            display: block;
-            text-align: center;
-            margin-top: 20px;
-            color: #ff0000;
-            text-decoration: none;
-            transition: color 0.3s ease;
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
-        .view-all:hover {
-            color: #000;
+        .carousel-bg-1 {
+            background: linear-gradient(-45deg, #f0f9ff, #e0f2fe, #bae6fd, #dbeafe);
         }
 
-
-        .read-more {
-            text-align: center;
-            margin-top: 10px;
-            color: #ff0000;
-            text-decoration: none;
-            transition: color 0.3s ease;
-            display: inline-block;
+        .carousel-bg-2 {
+            background: linear-gradient(-45deg, #f5f3ff, #ede9fe, #ddd6fe, #e0e7ff);
         }
 
-        .read-more:hover {
-            color: #000;
+        .carousel-bg-3 {
+            background: linear-gradient(-45deg, #ecfdf5, #d1fae5, #a7f3d0, #e0f2fe);
         }
 
-        .footer-basic {
-            padding: 40px 0;
-            background-color: #ffffff;
-            color: #4b4c4d;
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .footer-basic ul {
-            padding: 0;
-            list-style: none;
-            text-align: center;
-            font-size: 18px;
-            line-height: 1.6;
-            margin-bottom: 0;
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
 
-        .footer-basic ul li {
-            display: inline;
-            margin-right: 20px;
+        .btn-secondary {
+            background-color: white;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .footer-basic ul a {
-            color: inherit;
-            text-decoration: none;
-            opacity: 0.8;
+        .btn-secondary:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
 
-        .footer-basic ul a:hover {
-            opacity: 1;
+        .nav-link {
+            position: relative;
+            color: #1e293b;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            transition: all 0.3s ease;
         }
 
-        .footer-basic .social {
-            text-align: center;
-            padding-bottom: 25px;
+        .nav-link:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            background-color: var(--primary);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
         }
 
-        .footer-basic .social>a {
-            font-size: 24px;
-            width: 40px;
-            height: 40px;
-            line-height: 40px;
-            display: inline-block;
-            text-align: center;
-            border-radius: 50%;
-            border: 1px solid #ccc;
-            margin: 0 8px;
-            color: inherit;
-            opacity: 0.75;
+        .nav-link:hover {
+            color: var(--primary);
         }
 
-        .footer-basic .social>a:hover {
-            opacity: 0.9;
+        .nav-link:hover:after {
+            width: 80%;
         }
 
-        @keyframes buttonAnimation {
-            0% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.1);
-            }
-            100% {
-                transform: scale(1);
-            }
+        .mobile-menu {
+            display: none;
+            flex-direction: column;
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            padding: 1rem;
+            position: absolute;
+            top: 100%;
+            right: 1rem;
+            z-index: 50;
+            min-width: 250px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .mobile-menu.active {
+            display: flex;
+        }
+
+        .mobile-menu a {
+            padding: 0.75rem 1rem;
+            border-radius: 0.25rem;
+            transition: all 0.2s ease;
+        }
+
+        .mobile-menu a:hover {
+            background-color: #f1f5f9;
+            color: var(--primary);
         }
 
         /* Dropdown Styles */
-        .profile-dropdown {
+        .dropdown {
             position: relative;
             display: inline-block;
-        }
-
-        .profile-image {
-            width: 50px; /* Adjust as needed */
-            height: 50px; /* Adjust as needed */
-            border-radius: 50%; /* To make it circular */
         }
 
         .dropdown-content {
             display: none;
             position: absolute;
-            background-color: #f9f9f9;
-            min-width: 120px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 1;
-            top: 100%; /* Position the dropdown below the profile image */
-            right: 0; /* Align the dropdown to the right edge of the profile image */
-            animation: fadeIn 0.5s ease;
+            background-color: white;
+            min-width: 200px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.1);
+            z-index: 10;
+            border-radius: 0.5rem;
+            top: 100%;
+            left: 0;
+            margin-top: 0.5rem;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
         }
 
         .dropdown-content a {
-            color: black;
-            padding: 12px 16px;
-            text-decoration: none;
             display: block;
+            padding: 0.75rem 1rem;
+            color: #1e293b;
+            transition: all 0.2s ease;
         }
 
         .dropdown-content a:hover {
-            background-color: #f1f1f1;
+            background-color: #f1f5f9;
+            color: var(--primary);
         }
 
-        .profile-dropdown:hover .dropdown-content {
+        .mobile-dropdown {
+            width: 100%;
+        }
+
+        .mobile-dropdown-content {
+            display: none;
+            padding-left: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .mobile-dropdown-content.active {
             display: block;
+        }
+
+        /* Job Card Styles */
+        .job-card {
+            border-radius: 1rem;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .job-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-in {
+            animation: slideIn 0.5s ease-in-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Enhanced Carousel Styles */
+        .enhanced-carousel {
+            position: relative;
+            overflow: hidden;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .enhanced-carousel-inner {
+            display: flex;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .enhanced-carousel-item {
+            min-width: 100%;
+            position: relative;
+        }
+
+        .enhanced-carousel-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .enhanced-carousel-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 100%);
+            z-index: -1;
+        }
+
+        .enhanced-carousel-content {
+            padding: 3rem;
+            color: white;
+            max-width: 600px;
+        }
+
+        .enhanced-carousel-indicators {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+        }
+
+        .enhanced-carousel-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: rgba(255,255,255,0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .enhanced-carousel-indicator.active {
+            width: 30px;
+            border-radius: 10px;
+            background-color: white;
+        }
+
+        .enhanced-carousel-controls {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+            transform: translateY(-50%);
+        }
+
+        .enhanced-carousel-control {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: rgba(255,255,255,0.2);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .enhanced-carousel-control:hover {
+            background-color: rgba(255,255,255,0.4);
+        }
+
+        /* Responsive fixes */
+        @media (max-width: 768px) {
+            .desktop-nav {
+                display: none;
+            }
+
+            .mobile-nav-button {
+                display: block;
+            }
+
+            .enhanced-carousel-content {
+                padding: 2rem 1rem;
+            }
+
+            .enhanced-carousel-title {
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
-<body>
-    <nav class="navbar">
-        <div class="logo">OJP</div>
-        <ul class="nav-links">
-            <li><a href="{% url 'jobseekerhomepage' %}">Home</a></li>
-            <li><a href="">jobs</a></li>
-            <li><a href="{% url 'jobseekermodule:job_details_list' %}">View Jobs</a></li>
-        </ul>
-        <div class="nav-links">
-            {% if user.is_authenticated %}
-            <li class="nav-item">
-                <span class="nav-link" style="color:black">Welcome, {{ user.username }}</span>
-            </li>
-            <div class="profile-dropdown">
-                <img id="current-profile-picture" src="" alt="Profile Picture" class="profile-image">
-                <div class="dropdown-content">
-                     <a href="{% url 'account_details' %}"><i class="fa fa-user"></i> Account</a>
-                        <a href="{% url 'user_profile' %}"><i class="fa fa-user-circle-o"></i> Profile</a>
-                        <a href="{% url 'logout' %}"><i class="fa fa-sign-out"></i> Logout</a>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <!-- Logo with href -->
+                <a href="jobseekerhomepage" class="flex items-center space-x-2">
+                    <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-400 rounded-lg flex items-center justify-center shadow-md">
+                        <i class="fas fa-network-wired text-white text-xl"></i>
+                    </div>
+                    <span class="text-2xl font-bold logo-text">CAREERLINK</span>
+                </a>
+
+                <!-- Desktop Navigation -->
+                <nav class="desktop-nav hidden md:flex items-center space-x-1">
+                    <a href="jobseekerhomepage" class="nav-link">Home</a>
+                    <div class="dropdown">
+                        <a href="#" class="nav-link">Find Jobs <i class="fas fa-chevron-down text-xs ml-1"></i></a>
+                        <div class="dropdown-content">
+                            <a href="#">Browse All Jobs</a>
+                            <a href="#">Job Categories</a>
+                            <a href="#">Remote Jobs</a>
+                            <a href="#">Featured Jobs</a>
+                        </div>
+                    </div>
+                    <div class="dropdown">
+                        <a href="#" class="nav-link">My Applications <i class="fas fa-chevron-down text-xs ml-1"></i></a>
+                        <div class="dropdown-content">
+                            <a href="#">Active Applications</a>
+                            <a href="#">Application History</a>
+                            <a href="#">Saved Jobs</a>
+                        </div>
+                    </div>
+                    <a href="#" class="nav-link">Career Resources</a>
+                    <a href="#" class="nav-link">Messages</a>
+                </nav>
+
+                <!-- Action Buttons -->
+                <div class="hidden md:flex items-center space-x-4">
+                    <a href="#" class="flex items-center text-gray-700 hover:text-blue-600 transition-colors">
+                        <i class="fas fa-bell text-xl"></i>
+                        <span class="absolute w-2 h-2 bg-red-500 rounded-full top-4 ml-3"></span>
+                    </a>
+                    <div class="dropdown">
+                        <button class="flex items-center space-x-2">
+                            <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-semibold" id="profile-initial">
+                                <!-- Initial will be set by JavaScript -->
+                            </div>
+                            <span class="font-medium" id="profile-name">
+                                <!-- Name will be set by JavaScript -->
+                            </span>
+                            <i class="fas fa-chevron-down text-xs"></i>
+                        </button>
+                        <div class="dropdown-content" style="right: 0; left: auto;">
+                            <div class="p-4 border-b border-gray-100">
+                                <p class="font-semibold text-gray-800" id="dropdown-fullname">
+                                    <!-- Full name will be set by JavaScript -->
+                                </p>
+                                <p class="text-sm text-gray-600" id="dropdown-email">
+                                    <!-- Email will be set by JavaScript -->
+                                </p>
+                                <p class="text-xs text-gray-500 mt-1" id="dropdown-username">
+                                    <!-- Username will be set by JavaScript -->
+                                </p>
+                            </div>
+                            <a href="#" class="flex items-center">
+                                <i class="fas fa-user mr-2 text-blue-600"></i> View Profile
+                            </a>
+                            <a href="#" class="flex items-center">
+                                <i class="fas fa-cog mr-2 text-blue-600"></i> Account Settings
+                            </a>
+                            <a href="#" class="flex items-center">
+                                <i class="fas fa-file-alt mr-2 text-blue-600"></i> My Resume
+                            </a>
+                            <a href="#" class="flex items-center">
+                                <i class="fas fa-bookmark mr-2 text-blue-600"></i> Saved Jobs
+                            </a>
+                            <div class="border-t my-2"></div>
+                            <a href="logout" class="flex items-center text-red-600">
+                                <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-button" class="mobile-nav-button md:hidden text-gray-700 focus:outline-none">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+
+                <!-- Mobile Menu -->
+                <div id="mobile-menu" class="mobile-menu">
+                    <div class="p-4 border-b border-gray-100 mb-2">
+                        <p class="font-semibold text-gray-800" id="mobile-fullname">
+                            <!-- Full name will be set by JavaScript -->
+                        </p>
+                        <p class="text-sm text-gray-600" id="mobile-email">
+                            <!-- Email will be set by JavaScript -->
+                        </p>
+                        <p class="text-xs text-gray-500 mt-1" id="mobile-username">
+                            <!-- Username will be set by JavaScript -->
+                        </p>
+                    </div>
+
+                    <a href="jobseekerhomepage" class="slide-in">Home</a>
+
+                    <div class="mobile-dropdown slide-in" style="animation-delay: 0.05s;">
+                        <div class="flex justify-between items-center p-3 cursor-pointer mobile-dropdown-toggle">
+                            <span>Find Jobs</span>
+                            <i class="fas fa-chevron-down text-xs"></i>
+                        </div>
+                        <div class="mobile-dropdown-content">
+                            <a href="#">Browse All Jobs</a>
+                            <a href="#">Job Categories</a>
+                            <a href="#">Remote Jobs</a>
+                            <a href="#">Featured Jobs</a>
+                        </div>
+                    </div>
+
+                    <div class="mobile-dropdown slide-in" style="animation-delay: 0.1s;">
+                        <div class="flex justify-between items-center p-3 cursor-pointer mobile-dropdown-toggle">
+                            <span>My Applications</span>
+                            <i class="fas fa-chevron-down text-xs"></i>
+                        </div>
+                        <div class="mobile-dropdown-content">
+                            <a href="#">Active Applications</a>
+                            <a href="#">Application History</a>
+                            <a href="#">Saved Jobs</a>
+                        </div>
+                    </div>
+
+                    <a href="#" class="slide-in" style="animation-delay: 0.15s;">Career Resources</a>
+                    <a href="#" class="slide-in" style="animation-delay: 0.2s;">Messages</a>
+
+                    <div class="border-t my-2 pt-2">
+                        <a href="#" class="slide-in flex items-center" style="animation-delay: 0.25s;">
+                            <i class="fas fa-bell mr-2 text-blue-600"></i> Notifications
+                            <span class="ml-2 bg-red-500 text-white text-xs rounded-full px-2">3</span>
+                        </a>
+                        <a href="#" class="slide-in flex items-center" style="animation-delay: 0.3s;">
+                            <i class="fas fa-user mr-2 text-blue-600"></i> View Profile
+                        </a>
+                        <a href="#" class="slide-in flex items-center" style="animation-delay: 0.35s;">
+                            <i class="fas fa-cog mr-2 text-blue-600"></i> Account Settings
+                        </a>
+                        <a href="#" class="slide-in flex items-center" style="animation-delay: 0.4s;">
+                            <i class="fas fa-file-alt mr-2 text-blue-600"></i> My Resume
+                        </a>
+                        <a href="#" class="slide-in flex items-center" style="animation-delay: 0.45s;">
+                            <i class="fas fa-bookmark mr-2 text-blue-600"></i> Saved Jobs
+                        </a>
+                        <div class="border-t my-2"></div>
+                        <a href="logout" class="slide-in flex items-center text-red-600" style="animation-delay: 0.5s;">
+                            <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                        </a>
+                    </div>
                 </div>
             </div>
-            {% endif %}
         </div>
-    </nav>
-    <br><br>
-    <div class="content">
-        <h1 align="center">WELCOME TO JOBSEEKER HOMEPAGE</h1>
-        <div class="job-portal-images">
-            <img src="https://media.istockphoto.com/id/1394701218/photo/job-search-concept-find-your-career-woman-looking-at-online-website-by-laptop-computer-people.jpg?s=612x612&w=0&k=20&c=V32cT3dAoI7plQSnV-i7YxP43YvaoyA0jLS4729gNWM="
-                alt="Image 1">
-            <img src="https://st4.depositphotos.com/12985790/22703/i/450/depositphotos_227039222-stock-photo-close-shot-wooden-blocks-jobs.jpg"
-                alt="Image 2">
-            <img src="https://media.istockphoto.com/id/1488824909/photo/decide-commit-focus-succeed-text-on-wooden-blocks-with-alarm-clock-on-white-cover-background.webp?b=1&s=170667a&w=0&k=20&c=siiDS1p3Qt6VQ4wT37OhS5xkq6mx0zSP_7SrH4QGqMY="
-                alt="Image 3">
-        </div>
-        <div class="card">
-            <h2>Featured Jobs</h2>
-            <p>Here are some of our top job listings:</p>
-            <div class="job-cards">
-                <a href="https://www.nestle.in/jobs" class="job-card">
-                    <img src="https://canadajobbank.org/wp-content/uploads/2021/06/Nestle-300x204.jpg" alt="Job 1">
-                    <h3>Nestle India</h3>
-                    <p>Food and Beverage</p>
-                </a>
-                <a href="https://www.sonyjobs.com/" class="job-card">
-                    <img src="https://www.sony.com/en/SonyInfo/Careers/jnvm8c000001ejsb-img/csl_sp.jpg" alt="Job 2">
-                    <h3>Sony</h3>
-                    <p>Consumer Electronics</p>
-                </a>
-                <a href="https://www.toyotabharat.com/careers/" class="job-card">
-                    <img src="https://cdn.phenompeople.com/CareerConnectResources/TOYOUS/social/og-share-logo-1638900220844.png" alt="Job 3">
-                    <h3>Toyota</h3>
-                    <p>Automobile</p>
-                </a>
-                <!-- Add more job cards as needed -->
+    </header>
+
+    <!-- Dashboard Welcome Section -->
+    <section class="container mx-auto px-4 py-8">
+        <div class="bg-white rounded-2xl shadow-sm p-6 md:p-8">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
+                <div>
+                    <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">Welcome back, <span class="text-blue-600" id="welcome-name"><!-- Name will be set by JavaScript --></span>!</h1>
+                    <p class="text-gray-600">Your job search dashboard is updated with new opportunities.</p>
+                </div>
+                <div class="mt-4 md:mt-0 flex space-x-3">
+                    <button class="btn-primary">
+                        <i class="fas fa-search mr-2"></i> Find Jobs
+                    </button>
+                    <button class="btn-secondary">
+                        <i class="fas fa-file-alt mr-2"></i> Update Resume
+                    </button>
+                </div>
             </div>
-            <a href="{% url 'company' %}" class="view-all">View All </a>
         </div>
-    </div>
-    <div class="footer-basic">
-        <footer>
-            <div class="social">
-                <a href="#"><i class="fa fa-facebook"></i></a>
-                <a href="#"><i class="fa fa-google"></i></a>
-                <a href="#"><i class="fa fa-linkedin"></i></a>
-                <a href="#"><i class="fa fa-instagram"></i></a>
-                <a href="#"><i class="fa fa-twitter"></i></a>
+    </section>
+
+    <!-- Enhanced Carousel Section -->
+    <section class="container mx-auto px-4 py-8">
+        <div class="enhanced-carousel" style="height: 400px;">
+            <div class="enhanced-carousel-inner">
+                <!-- Carousel Item 1 -->
+                <div class="enhanced-carousel-item">
+                    <div class="enhanced-carousel-bg" style="background-image: url('https://images.unsplash.com/photo-1521737852567-6949f3f9f2b5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80');"></div>
+                    <div class="enhanced-carousel-overlay"></div>
+                    <div class="flex items-center h-full">
+                        <div class="enhanced-carousel-content">
+                            <h2 class="text-3xl md:text-4xl font-bold mb-4 enhanced-carousel-title">Discover Your Dream Career</h2>
+                            <p class="text-lg mb-6 text-gray-200">Browse thousands of job listings tailored to your skills and experience.</p>
+                            <button class="btn-primary">
+                                <i class="fas fa-search mr-2"></i> Explore Jobs
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Carousel Item 2 -->
+                <div class="enhanced-carousel-item">
+                    <div class="enhanced-carousel-bg" style="background-image: url('https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80');"></div>
+                    <div class="enhanced-carousel-overlay"></div>
+                    <div class="flex items-center h-full">
+                        <div class="enhanced-carousel-content">
+                            <h2 class="text-3xl md:text-4xl font-bold mb-4 enhanced-carousel-title">Stand Out With a Professional Resume</h2>
+                            <p class="text-lg mb-6 text-gray-200">Create a standout resume that gets noticed by top employers.</p>
+                            <button class="btn-primary">
+                                <i class="fas fa-file-alt mr-2"></i> Build Your Resume
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Carousel Item 3 -->
+                <div class="enhanced-carousel-item">
+                    <div class="enhanced-carousel-bg" style="background-image: url('https://images.unsplash.com/photo-1573164574572-cb89e39749b4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80');"></div>
+                    <div class="enhanced-carousel-overlay"></div>
+                    <div class="flex items-center h-full">
+                        <div class="enhanced-carousel-content">
+                            <h2 class="text-3xl md:text-4xl font-bold mb-4 enhanced-carousel-title">Prepare for Interview Success</h2>
+                            <p class="text-lg mb-6 text-gray-200">Access resources and tips to help you ace your next job interview.</p>
+                            <button class="btn-primary">
+                                <i class="fas fa-comments mr-2"></i> Interview Resources
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <ul class="list-inline">
-                <li class="list-inline-item"><a href="#">Home</a></li>
-                <li class="list-inline-item"><a href="">Services</a></li>
-                <li class="list-inline-item"><a href="#">About</a></li>
-                <li class="list-inline-item"><a href="#">Terms</a></li>
-                <li class="list-inline-item"><a href="#">Privacy Policy</a></li>
-            </ul>
-            <br><br>
-            <center>
-                <p class="copyright">&copy; 2024 Job Portal. All rights reserved by DUDEKULA SALEEM.</p>
-            </center>
-        </footer>
-    </div>
- <script>
+
+            <!-- Carousel Controls -->
+            <div class="enhanced-carousel-controls">
+                <div class="enhanced-carousel-control prev">
+                    <i class="fas fa-chevron-left text-white"></i>
+                </div>
+                <div class="enhanced-carousel-control next">
+                    <i class="fas fa-chevron-right text-white"></i>
+                </div>
+            </div>
+
+            <!-- Carousel Indicators -->
+            <div class="enhanced-carousel-indicators">
+                <div class="enhanced-carousel-indicator active" data-index="0"></div>
+                <div class="enhanced-carousel-indicator" data-index="1"></div>
+                <div class="enhanced-carousel-indicator" data-index="2"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recommended Jobs Section -->
+    <section class="container mx-auto px-4 py-8">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-gray-800">Recommended Jobs</h2>
+            <a href="#" class="text-blue-600 font-medium flex items-center">
+                View all <i class="fas fa-arrow-right ml-2"></i>
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Job 1 -->
+            <div class="job-card bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-code text-blue-600 text-xl"></i>
+                    </div>
+                    <button class="text-gray-400 hover:text-blue-600">
+                        <i class="far fa-bookmark text-xl"></i>
+                    </button>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">Senior Frontend Developer</h3>
+                <p class="text-blue-600 font-medium mb-3">TechCorp Solutions</p>
+                <div class="flex flex-wrap gap-2 mb-4">
+                    <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Remote</span>
+                    <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Full-time</span>
+                    <span class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded">Senior Level</span>
+                </div>
+                <div class="flex justify-between items-center text-sm text-gray-500 mb-4">
+                    <span><i class="fas fa-map-marker-alt mr-1"></i> New York, NY</span>
+                    <span><i class="fas fa-dollar-sign mr-1"></i> $120K - $150K</span>
+                </div>
+                <button class="btn-primary w-full">Apply Now</button>
+            </div>
+
+            <!-- Job 2 -->
+            <div class="job-card bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-chart-line text-green-600 text-xl"></i>
+                    </div>
+                    <button class="text-gray-400 hover:text-blue-600">
+                        <i class="far fa-bookmark text-xl"></i>
+                    </button>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">Marketing Manager</h3>
+                <p class="text-blue-600 font-medium mb-3">Global Brands Inc.</p>
+                <div class="flex flex-wrap gap-2 mb-4">
+                    <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Hybrid</span>
+                    <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Full-time</span>
+                    <span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded">Mid Level</span>
+                </div>
+                <div class="flex justify-between items-center text-sm text-gray-500 mb-4">
+                    <span><i class="fas fa-map-marker-alt mr-1"></i> Chicago, IL</span>
+                    <span><i class="fas fa-dollar-sign mr-1"></i> $90K - $110K</span>
+                </div>
+                <button class="btn-primary w-full">Apply Now</button>
+            </div>
+
+            <!-- Job 3 -->
+            <div class="job-card bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-database text-purple-600 text-xl"></i>
+                    </div>
+                    <button class="text-gray-400 hover:text-blue-600">
+                        <i class="far fa-bookmark text-xl"></i>
+                    </button>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">Data Scientist</h3>
+                <p class="text-blue-600 font-medium mb-3">Innovate AI</p>
+                <div class="flex flex-wrap gap-2 mb-4">
+                    <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Remote</span>
+                    <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Full-time</span>
+                    <span class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded">Senior Level</span>
+                </div>
+                <div class="flex justify-between items-center text-sm text-gray-500 mb-4">
+                    <span><i class="fas fa-map-marker-alt mr-1"></i> Remote</span>
+                    <span><i class="fas fa-dollar-sign mr-1"></i> $130K - $160K</span>
+                </div>
+                <button class="btn-primary w-full">Apply Now</button>
+            </div>
+        </div>
+    </section>
+    <!-- Career Resources Section -->
+    <section class="container mx-auto px-4 py-8">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-gray-800">Career Resources</h2>
+            <a href="#" class="text-blue-600 font-medium flex items-center">
+                View all <i class="fas fa-arrow-right ml-2"></i>
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Resource 1 -->
+            <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+                <div class="h-48 bg-gradient-to-r from-blue-500 to-blue-600 relative">
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <i class="fas fa-file-alt text-white text-5xl"></i>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Resume Building Guide</h3>
+                    <p class="text-gray-600 mb-4">Learn how to create a standout resume that gets noticed by recruiters.</p>
+                    <button class="btn-primary w-full">Read Guide</button>
+                </div>
+            </div>
+
+            <!-- Resource 2 -->
+            <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+                <div class="h-48 bg-gradient-to-r from-purple-500 to-purple-600 relative">
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <i class="fas fa-comments text-white text-5xl"></i>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Interview Preparation</h3>
+                    <p class="text-gray-600 mb-4">Tips and strategies to help you ace your next job interview.</p>
+                    <button class="btn-primary w-full">Read Guide</button>
+                </div>
+            </div>
+
+            <!-- Resource 3 -->
+            <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+                <div class="h-48 bg-gradient-to-r from-green-500 to-green-600 relative">
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <i class="fas fa-briefcase text-white text-5xl"></i>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Career Development</h3>
+                    <p class="text-gray-600 mb-4">Strategies for advancing your career and achieving your professional goals.</p>
+                    <button class="btn-primary w-full">Read Guide</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white pt-16 pb-8 mt-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+                <!-- Company Info -->
+                <div>
+                    <a href="jobseekerhomepage" class="flex items-center space-x-2 mb-6">
+                        <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-400 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-network-wired text-white text-xl"></i>
+                        </div>
+                        <span class="text-xl font-bold text-white">CAREERLINK</span>
+                    </a>
+                    <p class="text-gray-400 mb-6">Connecting talented professionals with top employers worldwide. Your career journey starts here.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-blue-600 hover:text-white transition duration-300">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-blue-600 hover:text-white transition duration-300">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-blue-600 hover:text-white transition duration-300">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-blue-600 hover:text-white transition duration-300">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="jobseekerhomepage" class="text-gray-400 hover:text-white transition duration-300">Home</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Browse Jobs</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Companies</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Resources</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">About Us</a></li>
+                    </ul>
+                </div>
+
+                <!-- Resources -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Resources</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Career Advice</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Resume Builder</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Salary Guide</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Interview Tips</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Job Search Tips</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Contact Us</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start space-x-3">
+                            <i class="fas fa-map-marker-alt mt-1 text-blue-400"></i>
+                            <span class="text-gray-400">123 Career Street, Employment City, EC 12345</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-phone-alt text-blue-400"></i>
+                            <span class="text-gray-400">+1 (555) 123-4567</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-envelope text-blue-400"></i>
+                            <span class="text-gray-400">info@careerlink.com</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Bottom Footer -->
+            <div class="pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 text-sm mb-4 md:mb-0">&copy; 2023 CAREERLINK. All rights reserved.</p>
+                <div class="flex flex-wrap justify-center gap-4">
+                    <a href="#" class="text-gray-400 hover:text-white text-sm">Privacy Policy</a>
+                    <a href="#" class="text-gray-400 hover:text-white text-sm">Terms of Service</a>
+                    <a href="#" class="text-gray-400 hover:text-white text-sm">Accessibility</a>
+                    <a href="#" class="text-gray-400 hover:text-white text-sm">Sitemap</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Carousel, Mobile Menu, and Animations -->
+    <script>
         // Load user profile data from localStorage if available
         window.onload = function() {
             var loggedInUser = "{{ user.username }}"; // Get the currently logged-in username from the template
@@ -352,7 +878,182 @@
                     document.getElementById('current-profile-picture').src = userProfile.profilePicture;
                 }
             }
+
+            // Mock user data - This would come from Django's context in production
+            // Based on the account_details view function
+            const userData = {
+                username: "{{ user.username }}",
+                first_name: "{{ user.first_name }}",
+                last_name: "{{ user.last_name }}",
+                email: "{{ user.email }}"
+            };
+
+            // Determine user role based on username length as per the Python function
+            const userRole = userData.username && userData.username.length === 4 ? 'Employer' : 'Job Seeker';
+
+            // Set profile initial
+            const profileInitial = document.getElementById('profile-initial');
+            if (profileInitial) {
+                profileInitial.textContent = userData.first_name ? userData.first_name.charAt(0) : 'U';
+            }
+
+            // Set profile name
+            const profileName = document.getElementById('profile-name');
+            if (profileName) {
+                profileName.textContent = userData.first_name || 'User';
+            }
+
+            // Set welcome name
+            const welcomeName = document.getElementById('welcome-name');
+            if (welcomeName) {
+                welcomeName.textContent = userData.first_name || 'User';
+            }
+
+            // Set dropdown details
+            const dropdownFullname = document.getElementById('dropdown-fullname');
+            const dropdownEmail = document.getElementById('dropdown-email');
+            const dropdownUsername = document.getElementById('dropdown-username');
+
+            if (dropdownFullname) {
+                dropdownFullname.textContent = `${userData.first_name || ''} ${userData.last_name || ''}`.trim() || 'User';
+            }
+
+            if (dropdownEmail) {
+                dropdownEmail.textContent = userData.email || 'user@example.com';
+            }
+
+            if (dropdownUsername) {
+                dropdownUsername.textContent = `Username: ${userData.username || 'user'} (${userRole})`;
+            }
+
+            // Set mobile menu details
+            const mobileFullname = document.getElementById('mobile-fullname');
+            const mobileEmail = document.getElementById('mobile-email');
+            const mobileUsername = document.getElementById('mobile-username');
+
+            if (mobileFullname) {
+                mobileFullname.textContent = `${userData.first_name || ''} ${userData.last_name || ''}`.trim() || 'User';
+            }
+
+            if (mobileEmail) {
+                mobileEmail.textContent = userData.email || 'user@example.com';
+            }
+
+            if (mobileUsername) {
+                mobileUsername.textContent = `Username: ${userData.username || 'user'} (${userRole})`;
+            }
         };
+
+        // Mobile Menu Toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('active');
+        });
+
+        // Mobile Dropdown Toggle
+        const mobileDropdownToggles = document.querySelectorAll('.mobile-dropdown-toggle');
+
+        mobileDropdownToggles.forEach(toggle => {
+            toggle.addEventListener('click', (e) => {
+                const dropdownContent = toggle.nextElementSibling;
+                dropdownContent.classList.toggle('active');
+
+                // Toggle the chevron icon
+                const icon = toggle.querySelector('i');
+                if (dropdownContent.classList.contains('active')) {
+                    icon.classList.remove('fa-chevron-down');
+                    icon.classList.add('fa-chevron-up');
+                } else {
+                    icon.classList.remove('fa-chevron-up');
+                    icon.classList.add('fa-chevron-down');
+                }
+            });
+        });
+
+        // Enhanced Carousel Functionality
+        const carousel = document.querySelector('.enhanced-carousel-inner');
+        const carouselItems = document.querySelectorAll('.enhanced-carousel-item');
+        const prevBtn = document.querySelector('.enhanced-carousel-control.prev');
+        const nextBtn = document.querySelector('.enhanced-carousel-control.next');
+        const indicators = document.querySelectorAll('.enhanced-carousel-indicator');
+
+        let currentIndex = 0;
+        const itemCount = carouselItems.length;
+
+        // Update carousel position
+        function updateCarousel() {
+            carousel.style.transform = `translateX(-${currentIndex * 100}%)`;
+
+            // Update indicators
+            indicators.forEach((indicator, index) => {
+                if (index === currentIndex) {
+                    indicator.classList.add('active');
+                } else {
+                    indicator.classList.remove('active');
+                }
+            });
+        }
+
+        // Next slide
+        nextBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % itemCount;
+            updateCarousel();
+        });
+
+        // Previous slide
+        prevBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex - 1 + itemCount) % itemCount;
+            updateCarousel();
+        });
+
+        // Indicator clicks
+        indicators.forEach((indicator, index) => {
+            indicator.addEventListener('click', () => {
+                currentIndex = index;
+                updateCarousel();
+            });
+        });
+
+        // Auto-advance carousel
+        let carouselInterval = setInterval(() => {
+            currentIndex = (currentIndex + 1) % itemCount;
+            updateCarousel();
+        }, 6000);
+
+        // Pause carousel on hover
+        carousel.addEventListener('mouseenter', () => {
+            clearInterval(carouselInterval);
+        });
+
+        // Resume carousel on mouse leave
+        carousel.addEventListener('mouseleave', () => {
+            carouselInterval = setInterval(() => {
+                currentIndex = (currentIndex + 1) % itemCount;
+                updateCarousel();
+            }, 6000);
+        });
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        // Observe all cards and sections
+        document.querySelectorAll('.job-card, .bg-white').forEach(card => {
+            observer.observe(card);
+        });
     </script>
 </body>
 </html>

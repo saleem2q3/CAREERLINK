@@ -3,425 +3,532 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <title>OJP login form</title>
+    <title>Sign Up - CAREERLINK</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f2f2f2;
+            font-family: 'Inter', sans-serif;
         }
 
-        .navbar {
-            position: fixed;
-            top: 0;
-            width: 99%;
-            z-index: 1000;
-            background-color: white;
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: #000;
-            transition: background-color 0.3s ease;
-        }
-
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-        }
-
-        .nav-links {
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            align-items: center;
-        }
-
-        .nav-links li {
-            margin-right: 20px;
-        }
-
-        .nav-links li a {
-            text-decoration: none;
-            color: black;
-            transition: color 0.3s ease;
-        }
-
-        .nav-links li a:hover {
-            color:black;
-        }
-
-        .background {
-            position: relative;
-            background-image: url('https://t3.ftcdn.net/jpg/04/17/77/78/360_F_417777825_v7o8RvkQhxpZkE0ZBD4xwzri5hGFHkO3.jpg');
+        .auth-image {
+            background-image: url('https://images.unsplash.com/photo-1521737711867-e3b97375f902?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1287&q=80');
             background-size: cover;
             background-position: center;
-            height: 100;
+        }
+
+        .gradient-overlay {
+            background: linear-gradient(to right, rgba(37, 99, 235, 0.9), rgba(59, 130, 246, 0.7));
+        }
+
+        .logo-gradient {
+            background: linear-gradient(90deg, #2563eb, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 9999;
+            max-width: 350px;
+            transform: translateX(400px);
+            transition: transform 0.3s ease-out;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        /* Form focus effects */
+        .form-input:focus {
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        /* Button hover animation */
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.2);
+        }
+
+        /* Password strength meter */
+        .password-strength-meter {
+            height: 4px;
+            width: 100%;
+            background-color: #e5e7eb;
+            position: relative;
+            margin-top: 6px;
+            border-radius: 2px;
             overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
         }
 
-         .left-info {
-                flex: 1;
-                color: #fff;
-                padding: 0 20px;
-            }
-
-            .left-info h1 {
-                font-size: 36px;
-                margin-bottom: 10px;
-            }
-
-            .left-info p {
-                font-size: 18px;
-            }
-        .content {
-            flex: 1;
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            height: 100vh;
-            position: relative;
-            z-index: 1;
-            padding: 20px;
-            margin-top: 100px;
+        .password-strength-meter-fill {
+            height: 100%;
+            border-radius: 2px;
+            transition: width 0.3s ease, background-color 0.3s ease;
         }
 
-        .login-card,
-        .signup-card {
-            width: 300px; /* Adjusted width */
-            background-color: #fff;
-            border-radius: 20px;
-            padding: 30px;
-            margin: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s;
-            animation: slideInLeft 1s ease forwards;
+        .strength-weak {
+            background-color: #ef4444;
+            width: 25%;
         }
 
-        .login-form label,
-        .signup-form label {
-            display: block;
-            margin-bottom: 5px;
-            color: #555;
+        .strength-fair {
+            background-color: #f59e0b;
+            width: 50%;
         }
 
-        .login-form input[type="text"],
-        .login-form input[type="email"], /* Added email input */
-        .login-form input[type="password"],
-        .signup-form input[type="text"],
-        .signup-form input[type="email"],
-        .signup-form input[type="password"] {
+        .strength-good {
+            background-color: #10b981;
+            width: 75%;
+        }
+
+        .strength-strong {
+            background-color: #059669;
             width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            outline: none;
-        }
-
-        .login-form .password-container,
-        .signup-form .password-container {
-            position: relative;
-        }
-
-        .login-form .password-container i,
-        .signup-form .password-container i {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            color: #ccc;
-        }
-
-        .login-form button,
-        .signup-form button {
-            width: 100%;
-            background-color: #ff0000;
-            color: #fff;
-            border: none;
-            padding: 10px 0;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-
-        .login-form button:hover,
-        .signup-form button:hover {
-            background-color: #fff;
-            color: #ff0000;
-        }
-
-        .footer-basic {
-            padding: 40px 0;
-            background-color: #ffffff;
-            color: #4b4c4d;
-            text-align: center;
-            width: 100%;
-        }
-
-        .footer-basic ul {
-            padding: 0;
-            list-style: none;
-            text-align: center;
-            font-size: 18px;
-            line-height: 1.6;
-            margin-bottom: 0;
-            display: flex;
-            justify-content: center;
-        }
-
-        .footer-basic li {
-            padding: 0 10px;
-        }
-
-        .footer-basic ul a {
-            color: inherit;
-            text-decoration: none;
-            opacity: 0.8;
-        }
-
-        .footer-basic ul a:hover {
-            opacity: 1;
-        }
-
-        .footer-basic .social {
-            text-align: center;
-            padding-bottom: 25px;
-        }
-
-        .footer-basic .social>a {
-            font-size: 24px;
-            width: 40px;
-            height: 40px;
-            line-height: 40px;
-            display: inline-block;
-            text-align: center;
-            border-radius: 50%;
-            border: 1px solid #ccc;
-            margin: 0 8px;
-            color: inherit;
-            opacity: 0.75;
-        }
-
-        .footer-basic .social>a:hover {
-            opacity: 0.9;
-        }
-
-        @keyframes slideInLeft {
-            from {
-                transform: translateX(-100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        @keyframes zoomInOut {
-            0% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.05);
-            }
-            100% {
-                transform: scale(1);
-            }
-        }
-
-        .signup-form .form-group {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .signup-form label {
-            flex: 1;
-            margin-right: 10px;
-        }
-
-        .signup-form input[type="text"],
-        .signup-form input[type="email"],
-        .signup-form input[type="password"] {
-            flex: 2;
-            width: auto;
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            outline: none;
-        }
-        .alert {
-            padding: 10px;
-            border-radius: 5px;
-            margin-top: 10px;
-        }
-
-        .alert-success {
-            background-color: #ccffcc;
-            color: #006600;
-        }
-
-        .alert-danger {
-            background-color: #ffcccc;
-            color: #cc0000;
         }
     </style>
 </head>
-<body>
-<nav class="navbar">
-    <div class="logo">OJP</div>
-    <ul class="nav-links">
-        <li><a href="{% url 'homepage' %}">Home</a></li>
-        <li><a href="{% url 'about' %}">About</a></li>
-        <li><a href="{% url 'contact' %}">Contact</a></li>
-    </ul>
-</nav>
-
-<div class="background">
-    <div class="left-info">
-        <h1>Welcome to Our Job Portal</h1>
-        <p>Find your dream job with us!</p>
-        <p>where people who need jobs can find jobs and companies looking for job seekers can find the perfect employees. It serves as a medium where job seekers can create profiles, upload resumes, and search for job openings across various industries and locations. Employers, on the other hand, can post job vacancies, review applicant profiles, and conduct the initial stages of the hiring process through the portal. </p>
-    </div>
-
-    <div class="content">
-        <div class="login-card">
-            <h2>Login</h2>
-            <form class="login-form" action="{% url 'login1' %}" method="post">
-                {% csrf_token %}
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" required><br><br>
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required><br><br> <!-- Added email input -->
-                <label for="password">Password:</label>
-                <div class="password-container">
-                    <input type="password" id="password" name="password" required>
-                    <i class="fa fa-eye" id="show-password"></i>
-
+<body class="bg-gray-50">
+    <!-- Toast Notification for Errors -->
+    <div id="toast" class="toast rounded-lg shadow-lg overflow-hidden">
+        <div class="flex">
+            <div class="bg-red-500 flex items-center justify-center w-12">
+                <i class="fas fa-exclamation-circle text-white text-xl"></i>
+            </div>
+            <div class="bg-white px-4 py-3 w-full">
+                <div class="flex justify-between items-center">
+                    <h3 class="font-medium text-gray-900">Error</h3>
+                    <button id="closeToast" class="text-gray-400 hover:text-gray-500">
+                        <i class="fas fa-times"></i>
+                    </button>
                 </div>
-                   <p><a href="#" class="forgot-password-link">forgot password ?</a></p>
-                <button type="submit">Login</button>
-            </form>
-            <p>No Account Yet? <a href="#" class="signup-link">Sign Up</a></p>
-              <!-- Flash Messages for Login -->
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-danger{% endif %}" role="alert">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endif %}
-        </div>
-
-        <div class="signup-card" style="display: none;">
-            <h2>Signup</h2>
-            <form class="signup-form" action="{% url 'signup1' %}" method="post">
-                {% csrf_token %}
-                <div class="form-group">
-                    <label for="username">Username:</label>
-                    <input type="text" id=" username" name="username" required>
-                </div>
-                <div class="form-group">
-                    <label for="email">Email:</label>
-                    <input type="email" id=" email" name="email" required>
-                </div>
-                <div class="form-group">
-                    <label for="first-name">First Name:</label>
-                    <input type="text" id="first-name" name="first_name" required>
-                </div>
-                <div class="form-group">
-                    <label for="last-name">Last Name:</label>
-                    <input type="text" id="last-name" name="last_name" required>
-                </div>
-                <div class="form-group">
-                    <label for="password">Password:</label>
-                    <input type="password" id=" password" name="password" required>
-                </div>
-                <div class="form-group">
-                    <label for="confirm-password">Confirm Password:</label>
-                    <input type="password" id="confirm-password" name="password1" required>
-                </div>
-                <button type="submit">Sign Up</button>
-            </form>
-            <p>Already have an account? <a href="#" class="login-link">Login</a></p>
-             {% if messages %}
-            {% for message in messages %}
-                <div class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-danger{% endif %}" role="alert">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endif %}
+                <p id="toastMessage" class="mt-1 text-sm text-gray-600"></p>
+            </div>
         </div>
     </div>
-</div>
 
-<div class="footer-basic">
-    <footer>
-        <div class="social">
-            <a href="#"><i class="fa fa-facebook"></i></a>
-            <a href="#"><i class="fa fa-google"></i></a>
-            <a href="#"><i class="fa fa-linkedin"></i></a>
-            <a href="#"><i class="fa fa-instagram"></i></a>
-            <a href="#"><i class="fa fa-twitter"></i></a>
+    <!-- Main Container -->
+    <div class="min-h-screen flex flex-col md:flex-row">
+        <!-- Left Side - Image -->
+        <div class="hidden md:block md:w-1/2 auth-image relative">
+            <div class="absolute inset-0 gradient-overlay flex flex-col items-center justify-center text-white p-12">
+                <div class="max-w-md text-center">
+                    <h1 class="text-4xl font-bold mb-6">Start Your Career Journey</h1>
+                    <p class="text-xl mb-8">Create an account to unlock all the features and opportunities CAREERLINK has to offer.</p>
+                    <div class="space-y-4">
+                        <div class="flex items-center">
+                            <div class="bg-white/20 p-2 rounded-full mr-4">
+                                <i class="fas fa-briefcase text-xl"></i>
+                            </div>
+                            <div class="text-left">
+                                <h3 class="font-semibold">Access Exclusive Jobs</h3>
+                                <p class="text-sm text-white/80">Get access to premium job listings</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="bg-white/20 p-2 rounded-full mr-4">
+                                <i class="fas fa-user-tie text-xl"></i>
+                            </div>
+                            <div class="text-left">
+                                <h3 class="font-semibold">Professional Profile</h3>
+                                <p class="text-sm text-white/80">Create your professional online presence</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="bg-white/20 p-2 rounded-full mr-4">
+                                <i class="fas fa-chart-line text-xl"></i>
+                            </div>
+                            <div class="text-left">
+                                <h3 class="font-semibold">Career Growth</h3>
+                                <p class="text-sm text-white/80">Access resources to advance your career</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <ul class="list-inline">
-            <li class="list-inline-item"><a href="#">Home</a></li>
-            <li class="list-inline-item"><a href="#">Services</a></li>
-            <li class="list-inline-item"><a href="#">About</a></li>
-            <li class="list-inline-item"><a href="#">Terms</a></li>
-            <li class="list-inline-item"><a href="#">Privacy Policy</a></li>
-        </ul>
-        <br><br><br>
-        <center>
-            <p>&copy; 2024 Job Portal. All rights reserved by DUDEKULA SALEEM.</p>
-        </center>
-    </footer>
-</div>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const loginCard = document.querySelector(".login-card");
-        const signupCard = document.querySelector(".signup-card");
-        const loginLink = document.querySelector(".login-link");
-        const signupLink = document.querySelector(".signup-link");
-        const showPasswordIcon = document.getElementById("show-password");
-        const passwordInput = document.getElementById("password");
+        <!-- Right Side - Signup Form -->
+        <div class="w-full md:w-1/2 flex items-center justify-center p-6 md:p-12">
+            <div class="w-full max-w-md">
+                <!-- Logo with href -->
+                <div class="text-center mb-10">
+                    <a href="{% url 'homepage' %}" class="inline-flex items-center space-x-2">
+                        <div class="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-400 rounded-lg flex items-center justify-center shadow-md">
+                            <i class="fas fa-network-wired text-white text-xl"></i>
+                        </div>
+                        <span class="text-3xl font-bold logo-gradient">CAREERLINK</span>
+                    </a>
+                </div>
 
-        loginLink.addEventListener("click", function(event) {
-            event.preventDefault();
-            loginCard.style.display = "block";
-            signupCard.style.display = "none";
+                <div class="bg-white rounded-2xl shadow-xl p-8">
+                    <div class="text-center mb-8">
+                        <h2 class="text-2xl font-bold text-gray-800">Create an Account</h2>
+                        <p class="text-gray-600 mt-1">Join CAREERLINK today</p>
+                    </div>
+
+                    <!-- Django Messages -->
+                    {% if messages %}
+                    <div class="mb-6">
+                        {% for message in messages %}
+                        <div class="{% if message.tags == 'error' %}bg-red-100 text-red-700{% else %}bg-green-100 text-green-700{% endif %} px-4 py-3 rounded-lg">
+                            {{ message }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <form method="POST" action="{% url 'signup1' %}" id="signupForm">
+                        {% csrf_token %}
+                        <div class="space-y-5">
+                            <!-- Username Field -->
+                            <div>
+                                <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-user text-gray-400"></i>
+                                    </div>
+                                    <input type="text" id="username" name="username" required
+                                        class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 form-input"
+                                        placeholder="Enter your username">
+                                </div>
+                                <p class="mt-1 text-xs text-gray-500">Username must be 4 or 10 digits</p>
+                            </div>
+
+                            <!-- Name Fields (Two Columns) -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <!-- First Name -->
+                                <div>
+                                    <label for="first_name" class="block text-sm font-medium text-gray-700 mb-1">First Name</label>
+                                    <div class="relative">
+                                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <i class="fas fa-user-tag text-gray-400"></i>
+                                        </div>
+                                        <input type="text" id="first_name" name="first_name" required
+                                            class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 form-input"
+                                            placeholder="First name">
+                                    </div>
+                                </div>
+
+                                <!-- Last Name -->
+                                <div>
+                                    <label for="last_name" class="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+                                    <div class="relative">
+                                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <i class="fas fa-user-tag text-gray-400"></i>
+                                        </div>
+                                        <input type="text" id="last_name" name="last_name" required
+                                            class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 form-input"
+                                            placeholder="Last name">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Email Field -->
+                            <div>
+                                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-envelope text-gray-400"></i>
+                                    </div>
+                                    <input type="email" id="email" name="email" required
+                                        class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 form-input"
+                                        placeholder="Enter your email">
+                                </div>
+                            </div>
+
+                            <!-- Password Field -->
+                            <div>
+                                <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-lock text-gray-400"></i>
+                                    </div>
+                                    <input type="password" id="password" name="password" required
+                                        class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 form-input"
+                                        placeholder="Create a password">
+                                    <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                                        <i class="fas fa-eye text-gray-400"></i>
+                                    </button>
+                                </div>
+                                <div class="password-strength-meter">
+                                    <div id="passwordStrength" class="password-strength-meter-fill"></div>
+                                </div>
+                                <p id="passwordHint" class="mt-1 text-xs text-gray-500">
+                                    Password must contain at least 8 characters, including one uppercase letter, one lowercase letter, one digit, and one special character.
+                                </p>
+                            </div>
+
+                            <!-- Confirm Password Field -->
+                            <div>
+                                <label for="password1" class="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-lock text-gray-400"></i>
+                                    </div>
+                                    <input type="password" id="password1" name="password1" required
+                                        class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 form-input"
+                                        placeholder="Confirm your password">
+                                    <button type="button" id="toggleConfirmPassword" class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                                        <i class="fas fa-eye text-gray-400"></i>
+                                    </button>
+                                </div>
+                                <p id="passwordMatchStatus" class="mt-1 text-xs hidden"></p>
+                            </div>
+
+                            <!-- Terms and Conditions -->
+                            <div class="flex items-start">
+                                <div class="flex items-center h-5">
+                                    <input id="terms" name="terms" type="checkbox" required
+                                        class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                </div>
+                                <div class="ml-3 text-sm">
+                                    <label for="terms" class="font-medium text-gray-700">
+                                        I agree to the
+                                        <a href="#" class="text-blue-600 hover:text-blue-800">Terms of Service</a>
+                                        and
+                                        <a href="#" class="text-blue-600 hover:text-blue-800">Privacy Policy</a>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div>
+                                <button type="submit"
+                                    class="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 transition-all duration-300 btn-primary flex items-center justify-center">
+                                    <i class="fas fa-user-plus mr-2"></i>
+                                    Create Account
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- Social Signup -->
+                    <div class="mt-6">
+                        <div class="relative flex items-center justify-center">
+                            <div class="border-t border-gray-300 absolute w-full"></div>
+                            <div class="bg-white px-4 relative text-sm text-gray-500">or sign up with</div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4 mt-4">
+                            <button class="flex items-center justify-center py-2.5 px-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                                <i class="fab fa-google text-red-500 mr-2"></i>
+                                <span class="text-sm font-medium">Google</span>
+                            </button>
+                            <button class="flex items-center justify-center py-2.5 px-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                                <i class="fab fa-facebook-f text-blue-600 mr-2"></i>
+                                <span class="text-sm font-medium">Facebook</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Login Link -->
+                    <div class="mt-8 text-center">
+                        <p class="text-sm text-gray-600">
+                            Already have an account?
+                            <a href="{% url 'login' %}" class="font-medium text-blue-600 hover:text-blue-800">
+                                Sign in
+                            </a>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="mt-8 text-center text-gray-500 text-sm">
+                    <p>&copy; 2023 CAREERLINK. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle password visibility
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
+        const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+        const confirmPasswordInput = document.getElementById('password1');
+
+        togglePassword.addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+
+            // Toggle eye icon
+            const eyeIcon = this.querySelector('i');
+            eyeIcon.classList.toggle('fa-eye');
+            eyeIcon.classList.toggle('fa-eye-slash');
         });
 
-        signupLink.addEventListener("click", function(event) {
-            event.preventDefault();
-            loginCard.style.display = "none";
-            signupCard.style.display = "block";
+        toggleConfirmPassword.addEventListener('click', function() {
+            const type = confirmPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            confirmPasswordInput.setAttribute('type', type);
+
+            // Toggle eye icon
+            const eyeIcon = this.querySelector('i');
+            eyeIcon.classList.toggle('fa-eye');
+            eyeIcon.classList.toggle('fa-eye-slash');
         });
 
-        showPasswordIcon.addEventListener("click", function() {
-            if (passwordInput.type === "password") {
-                passwordInput.type = "text";
-                showPasswordIcon.classList.remove("fa-eye");
-                showPasswordIcon.classList.add("fa-eye-slash");
+        // Password strength meter
+        const passwordStrength = document.getElementById('passwordStrength');
+        const passwordHint = document.getElementById('passwordHint');
+
+        passwordInput.addEventListener('input', function() {
+            const password = this.value;
+            const hasUpperCase = /[A-Z]/.test(password);
+            const hasLowerCase = /[a-z]/.test(password);
+            const hasDigit = /\d/.test(password);
+            const hasSpecialChar = /[!@#$%^&*?]/.test(password);
+            const isLongEnough = password.length >= 8;
+
+            let strength = 0;
+            if (hasUpperCase) strength++;
+            if (hasLowerCase) strength++;
+            if (hasDigit) strength++;
+            if (hasSpecialChar) strength++;
+            if (isLongEnough) strength++;
+
+            // Update strength meter
+            passwordStrength.className = 'password-strength-meter-fill';
+            if (password.length === 0) {
+                passwordStrength.classList.add('strength-weak');
+                passwordStrength.style.width = '0%';
+            } else if (strength < 3) {
+                passwordStrength.classList.add('strength-weak');
+            } else if (strength < 4) {
+                passwordStrength.classList.add('strength-fair');
+            } else if (strength < 5) {
+                passwordStrength.classList.add('strength-good');
             } else {
-                passwordInput.type = "password";
-                showPasswordIcon.classList.remove("fa-eye-slash");
-                showPasswordIcon.classList.add("fa-eye");
+                passwordStrength.classList.add('strength-strong');
+            }
+
+            // Update hint text
+            if (password.length > 0) {
+                let missingRequirements = [];
+                if (!hasUpperCase) missingRequirements.push('uppercase letter');
+                if (!hasLowerCase) missingRequirements.push('lowercase letter');
+                if (!hasDigit) missingRequirements.push('digit');
+                if (!hasSpecialChar) missingRequirements.push('special character');
+                if (!isLongEnough) missingRequirements.push('8+ characters');
+
+                if (missingRequirements.length > 0) {
+                    passwordHint.textContent = `Missing: ${missingRequirements.join(', ')}`;
+                    passwordHint.classList.remove('text-green-500');
+                    passwordHint.classList.add('text-red-500');
+                } else {
+                    passwordHint.textContent = 'Strong password!';
+                    passwordHint.classList.remove('text-red-500');
+                    passwordHint.classList.add('text-green-500');
+                }
+            } else {
+                passwordHint.textContent = 'Password must contain at least 8 characters, including one uppercase letter, one lowercase letter, one digit, and one special character.';
+                passwordHint.classList.remove('text-green-500', 'text-red-500');
+                passwordHint.classList.add('text-gray-500');
             }
         });
-    });
-</script>
 
+        // Password match check
+        const passwordMatchStatus = document.getElementById('passwordMatchStatus');
+
+        confirmPasswordInput.addEventListener('input', function() {
+            const password = passwordInput.value;
+            const confirmPassword = this.value;
+
+            if (confirmPassword.length > 0) {
+                passwordMatchStatus.classList.remove('hidden');
+
+                if (password === confirmPassword) {
+                    passwordMatchStatus.textContent = 'Passwords match!';
+                    passwordMatchStatus.classList.remove('text-red-500');
+                    passwordMatchStatus.classList.add('text-green-500');
+                } else {
+                    passwordMatchStatus.textContent = 'Passwords do not match';
+                    passwordMatchStatus.classList.remove('text-green-500');
+                    passwordMatchStatus.classList.add('text-red-500');
+                }
+            } else {
+                passwordMatchStatus.classList.add('hidden');
+            }
+        });
+
+        // Toast notification functionality
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toastMessage');
+        const closeToast = document.getElementById('closeToast');
+
+        // Function to show toast with message
+        function showToast(message) {
+            toastMessage.textContent = message;
+            toast.classList.add('show');
+
+            // Auto hide after 5 seconds
+            setTimeout(() => {
+                hideToast();
+            }, 5000);
+        }
+
+        // Function to hide toast
+        function hideToast() {
+            toast.classList.remove('show');
+        }
+
+        // Close toast on button click
+        closeToast.addEventListener('click', hideToast);
+
+        // Form validation
+        const signupForm = document.getElementById('signupForm');
+
+        signupForm.addEventListener('submit', function(e) {
+            // Username validation
+            const username = document.getElementById('username').value;
+            const usernamePattern = /^\d{4}$|^\d{10}$/;
+
+            if (!usernamePattern.test(username)) {
+                e.preventDefault();
+                showToast('Username must be 4 or 10 digits long');
+                return;
+            }
+
+            // Email validation
+            const email = document.getElementById('email').value;
+            const emailPattern = /^[^@]+@[^@]+\.[^@]+$/;
+
+            if (!emailPattern.test(email)) {
+                e.preventDefault();
+                showToast('Invalid Email Format');
+                return;
+            }
+
+            // Password validation
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('password1').value;
+            const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+            if (!passwordPattern.test(password)) {
+                e.preventDefault();
+                showToast('Password must contain at least 8 characters, including one uppercase letter, one lowercase letter, one digit, and one special character.');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                e.preventDefault();
+                showToast('Passwords do not match');
+                return;
+            }
+        });
+
+        // Show toast for Django messages
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.tags == 'error' %}
+                    showToast("{{ message }}");
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    </script>
 </body>
 </html>
